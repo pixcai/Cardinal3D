@@ -10,3 +10,10 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 CMakeUserPresets.json
+vcpkg_installed/
+.DS_Store
+imgui.ini
+*build*/
+log_*
+.vs/
+.vscode/

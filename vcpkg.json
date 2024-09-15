@@ -1,0 +1,23 @@
+{
+  "dependencies": [
+    "assimp",
+    {
+      "name": "glad",
+      "default-features": false,
+      "features": [
+        "gl-api-46",
+        "loader"
+      ]
+    },
+    {
+      "name": "imgui",
+      "features": [
+        "opengl3-binding",
+        "sdl2-binding"
+      ]
+    },
+    "stb",
+    "tinyfiledialogs",
+    "glm"
+  ]
+}

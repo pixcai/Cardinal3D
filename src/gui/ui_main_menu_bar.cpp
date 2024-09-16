@@ -1,4 +1,3 @@
-#include <imgui.h>
 #include <tinyfiledialogs/tinyfiledialogs.h>
 
 #include "manager.h"

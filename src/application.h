@@ -5,21 +5,27 @@
 #include <SDL2/SDL.h>
 
 #include "gui/manager.h"
-#include "platform.h"
+#include "rendering/renderer.h"
 
 namespace cardinal {
 
+class Platform;
+
 class Application {
   public:
-    Application();
+    Application(Platform *platform = nullptr);
     ~Application();
 
-    void Run();
-
   private:
-    Platform platform_;
+    friend class Platform;
+
+    void Render();
+    void ProcessEvent(const SDL_Event &event);
+
+    Platform *platform_;
     gui::Manager gui_;
     rendering::Scene scene_;
+    rendering::Renderer renderer_;
 };
 
 }; // namespace cardinal

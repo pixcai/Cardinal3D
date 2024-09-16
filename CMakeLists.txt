@@ -16,6 +16,7 @@ set(SOURCES_CARDINAL3D_GUI
 )
 
 set(SOURCES_CARDINAL3D_RENDERING
+    "src/rendering/framebuffer.cpp"
     "src/rendering/renderer.cpp"
     "src/rendering/scene.cpp"
 )

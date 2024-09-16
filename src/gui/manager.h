@@ -1,6 +1,7 @@
 #pragma once
 
-#include <glm/vec2.hpp>
+#include <glm/glm.hpp>
+#include <imgui.h>
 
 #include "rendering/scene.h"
 
@@ -9,7 +10,7 @@ namespace gui {
 
 class Manager {
   public:
-    Manager(const glm::vec2 dimension);
+    Manager(const glm::ivec2 dimension);
     ~Manager();
 
     void Render(rendering::Scene &scene);
@@ -17,7 +18,7 @@ class Manager {
   private:
     void RenderMainMenuBar(rendering::Scene &scene);
 
-    glm::vec2 dimension_;
+    glm::ivec2 dimension_;
 };
 
 } // namespace gui

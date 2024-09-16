@@ -25,6 +25,7 @@ Platform::Platform() {
 
     gladLoadGL();
 
+    IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGui_ImplSDL2_InitForOpenGL(window_, context_);
     ImGui_ImplOpenGL3_Init();
@@ -54,5 +55,7 @@ void Platform::EndFrame() {
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     SDL_GL_SwapWindow(window_);
 }
+
+SDL_Window *Platform::GetWindow() const { return window_; }
 
 } // namespace cardinal

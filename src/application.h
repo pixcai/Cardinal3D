@@ -4,6 +4,7 @@
 
 #include <SDL2/SDL.h>
 
+#include "gui/manager.h"
 #include "platform.h"
 
 namespace cardinal {
@@ -17,6 +18,8 @@ class Application {
 
   private:
     Platform platform_;
+    gui::Manager gui_;
+    rendering::Scene scene_;
 };
 
 }; // namespace cardinal

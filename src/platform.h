@@ -12,6 +12,8 @@ class Platform {
     void BeginFrame();
     void EndFrame();
 
+    SDL_Window *GetWindow() const;
+
   private:
     SDL_Window *window_ = nullptr;
     SDL_GLContext context_ = nullptr;

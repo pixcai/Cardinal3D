@@ -11,11 +11,13 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(SOURCES_CARDINAL3D_GUI
+    "src/gui/ui_main_menu_bar.cpp"
     "src/gui/manager.cpp"
 )
 
 set(SOURCES_CARDINAL3D_RENDERING
     "src/rendering/renderer.cpp"
+    "src/rendering/scene.cpp"
 )
 
 set(SOURCES_CARDINAL3D

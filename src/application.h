@@ -5,7 +5,6 @@
 #include <SDL2/SDL.h>
 
 #include "gui/manager.h"
-#include "rendering/renderer.h"
 
 namespace cardinal {
 
@@ -25,7 +24,6 @@ class Application {
     Platform *platform_;
     gui::Manager gui_;
     rendering::Scene scene_;
-    rendering::Renderer renderer_;
 };
 
 }; // namespace cardinal

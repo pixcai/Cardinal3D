@@ -16,38 +16,42 @@ void Renderer::Setup(const glm::ivec2 dimension) {
     glDepthFunc(GL_GREATER);
     glClearDepth(0.0f);
     glCullFace(GL_BACK);
-    current_ = new Renderer(dimension);
+    m_current = new Renderer(dimension);
 }
 
 void Renderer::Shutdown() {
-    delete current_;
-    current_ = nullptr;
+    delete m_current;
+    m_current = nullptr;
 }
 
 Renderer &Renderer::Get() {
-    assert(current_);
-    return *current_;
+    assert(m_current);
+    return *m_current;
 }
 
 void Renderer::BeginRender() {
-    framebuffer_.Clear(0, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-    framebuffer_.Clear(1, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-    framebuffer_.ClearDepth();
+    m_framebuffer.Clear(0, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+    m_framebuffer.Clear(1, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+    m_framebuffer.ClearDepth();
 }
 
 void Renderer::Render(Mesh &mesh, const MeshOptions &options) {
-    mesh_shader_.Bind();
-    mesh_shader_.Uniform("u_mvp", projection_ * options.model_view);
-    mesh_shader_.Uniform("u_color", options.color);
+    const glm::mat4 &projection = m_camera.GetProjectionMatrix();
+
+    m_mesh_shader.Bind();
+    m_mesh_shader.Uniform("u_mvp", projection * options.model_view);
+    m_mesh_shader.Uniform("u_color", options.color);
     mesh.Render();
 }
 
-void Renderer::EndRender() { framebuffer_.BlitToScreen(0, dimension_); }
+void Renderer::EndRender() { m_framebuffer.BlitToScreen(0, m_dimension); }
+
+Camera &Renderer::GetCamera() { return m_camera; }
 
 Renderer::Renderer(const glm::ivec2 dimension)
-    : framebuffer_(2, dimension, DEFAULT_SAMPLES, true),
-      mesh_shader_(Shader::Presets::mesh_vertex, Shader::Presets::mesh_fragment), dimension_(dimension),
-      projection_(glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f)) {}
+    : m_framebuffer(2, dimension, DEFAULT_SAMPLES, true),
+      m_mesh_shader(Shader::Presets::mesh_vertex, Shader::Presets::mesh_fragment), m_dimension(dimension),
+      m_camera(dimension) {}
 
 Renderer::~Renderer() {}
 

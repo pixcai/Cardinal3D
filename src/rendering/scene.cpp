@@ -20,8 +20,8 @@ SceneItem &SceneItem::operator=(SceneItem &&other) {
     return *this;
 }
 
-void SceneItem::Render() {
-    std::visit(overloaded{[&](SceneObject &object) { object.Render(); }}, data_);
+void SceneItem::Render(const glm::mat4 &view) {
+    std::visit(overloaded{[&](SceneObject &object) { object.Render(view); }}, data_);
 }
 
 Scene::Scene(SceneID start) : first_id_(start), next_id_(start) {}

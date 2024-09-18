@@ -1,7 +1,5 @@
 #include <utility>
 
-#include <glm/glm.hpp>
-
 #include "renderer.h"
 #include "scene_object.h"
 
@@ -12,7 +10,7 @@ SceneObject::SceneObject(SceneID id, Mesh &&mesh) : id_(id), mesh_(std::move(mes
 
 SceneID SceneObject::GetID() const { return id_; }
 
-void SceneObject::Render() { Renderer::Get().Render(mesh_, {id_, glm::vec3(1.0f), glm::mat4(1.0f)}); }
+void SceneObject::Render(const glm::mat4 &view) { Renderer::Get().Render(mesh_, {id_, glm::vec3(1.0f), view}); }
 
 void SceneObject::SetMeshDirty() { mesh_dirty_ = true; }
 

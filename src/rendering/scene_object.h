@@ -1,5 +1,7 @@
 #pragma once
 
+#include <glm/glm.hpp>
+
 #include "mesh.h"
 
 namespace cardinal {
@@ -20,7 +22,7 @@ class SceneObject {
 
     SceneID GetID() const;
 
-    void Render();
+    void Render(const glm::mat4 &view);
 
     void SetMeshDirty();
 

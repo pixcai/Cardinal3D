@@ -5,10 +5,14 @@
 #include <string>
 #include <variant>
 
+#include <glm/glm.hpp>
+
 #include "scene_object.h"
 
 namespace cardinal {
 namespace rendering {
+
+class Camera;
 
 class SceneItem {
   public:
@@ -20,7 +24,7 @@ class SceneItem {
     SceneItem &operator=(const SceneItem &other) = delete;
     SceneItem &operator=(SceneItem &&other);
 
-    void Render();
+    void Render(const glm::mat4 &view);
 
   private:
     std::variant<SceneObject> data_;

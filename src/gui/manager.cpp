@@ -7,8 +7,10 @@ Manager::Manager(const glm::ivec2 dimension) : dimension_(dimension) {}
 
 Manager::~Manager() {}
 
-void Manager::Render(rendering::Scene &scene) {
-    scene.ForEach([&](rendering::SceneItem &item) { item.Render(); });
+void Manager::Render(rendering::Scene &scene, const rendering::Camera &camera) {
+    const glm::mat4 &view = camera.GetViewMatrix();
+
+    scene.ForEach([&](rendering::SceneItem &item) { item.Render(view); });
     RenderMainMenuBar(scene);
 }
 

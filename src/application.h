@@ -21,9 +21,9 @@ class Application {
     void Render();
     void ProcessEvent(const SDL_Event &event);
 
-    Platform *platform_;
-    gui::Manager gui_;
-    rendering::Scene scene_;
+    Platform *m_platform;
+    gui::Manager m_gui;
+    rendering::Scene m_scene;
 };
 
 }; // namespace cardinal

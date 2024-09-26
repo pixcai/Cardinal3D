@@ -1,6 +1,9 @@
+// This file is part of Cardinal3D.
+// Copyleft 2024, pixcai and the Cardinal3D contributors. All wrongs reserved.
+
 #pragma once
 
-#include <glm/glm.hpp>
+#include "common.h"
 #include <glm/gtc/quaternion.hpp>
 
 namespace cardinal {
@@ -13,7 +16,7 @@ enum class CameraControl {
 };
 
 class Camera {
-  public:
+public:
     Camera(glm::ivec2 dimension);
 
     glm::mat4 &GetViewMatrix();
@@ -33,7 +36,7 @@ class Camera {
 
     void Reset();
 
-  private:
+private:
     void UpdatePosition();
 
     float m_fov, m_aspect_ratio, m_near, m_far, m_radius;

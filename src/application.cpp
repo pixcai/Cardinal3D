@@ -1,4 +1,5 @@
-#include <utility>
+// This file is part of Cardinal3D.
+// Copyleft 2024, pixcai and the Cardinal3D contributors. All wrongs reserved.
 
 #include "application.h"
 #include "rendering/renderer.h"
@@ -6,7 +7,9 @@
 namespace cardinal {
 
 Application::Application(Settings settings)
-    : m_platform(settings.title, settings.dimension), m_gui(m_platform.GetWindowSize()), m_scene(0),
+    : m_platform(settings.title, settings.dimension),
+      m_gui(m_platform.GetWindowSize()),
+      m_scene(0),
       m_camera(m_platform.GetDrawableSize()) {
     Renderer::Setup(m_platform.GetDrawableSize());
     Renderer::Get().SetProjectionMatrix(m_camera.GetProjectionMatrix());
@@ -23,14 +26,19 @@ Application::Application(Settings settings)
             {{1.0f, 1.0f, -1.0f}, {0.0f, 0.0f, 1.0f}, 6},
             {{-1.0f, 1.0f, -1.0f}, {0.0f, 0.0f, 1.0f}, 7},
         },
-        {0, 1, 2, 2, 3, 0, 4, 7, 6, 6, 5, 4, 3, 2, 6, 6, 7, 3, 0, 4, 5, 5, 1, 0, 4, 0, 3, 3, 7, 4, 5, 6, 2, 2, 1, 5},
+        {0, 1, 2, 2, 3, 0, 4, 7, 6, 6, 5, 4, 3, 2, 6, 6, 7, 3,
+         0, 4, 5, 5, 1, 0, 4, 0, 3, 3, 7, 4, 5, 6, 2, 2, 1, 5},
     };
     m_scene.Add(SceneObject{1, std::move(box)});
 }
 
-Application::~Application() { Renderer::Shutdown(); }
+Application::~Application() {
+    Renderer::Shutdown();
+}
 
-int Application::Run() { return m_platform.Run(*this); }
+int Application::Run() {
+    return m_platform.Run(*this);
+}
 
 void Application::Render() {
     Renderer &renderer = Renderer::Get();
@@ -76,8 +84,7 @@ void Application::ProcessEvent(const SDL_Event &event) {
         m_camera.SetScale(static_cast<float>(event.wheel.y));
         break;
     }
-    default:
-        break;
+    default: break;
     }
 }
 

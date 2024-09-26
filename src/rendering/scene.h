@@ -1,13 +1,13 @@
+// This file is part of Cardinal3D.
+// Copyleft 2024, pixcai and the Cardinal3D contributors. All wrongs reserved.
+
 #pragma once
 
+#include "common.h"
+#include "scene_object.h"
 #include <functional>
 #include <map>
-#include <string>
 #include <variant>
-
-#include <glm/glm.hpp>
-
-#include "scene_object.h"
 
 namespace cardinal {
 namespace rendering {
@@ -15,7 +15,7 @@ namespace rendering {
 class Camera;
 
 class SceneItem {
-  public:
+public:
     SceneItem() = default;
     SceneItem(SceneObject &&object);
     SceneItem(const SceneItem &other) = delete;
@@ -26,12 +26,12 @@ class SceneItem {
 
     void Render(const glm::mat4 &view);
 
-  private:
-    std::variant<SceneObject> data_;
+private:
+    std::variant<SceneObject> m_data;
 };
 
 class Scene {
-  public:
+public:
     Scene(SceneID start);
     ~Scene() = default;
 
@@ -42,9 +42,9 @@ class Scene {
     void ForEach(std::function<void(SceneItem &item)> callback);
     void ForEach(std::function<void(const SceneItem &item)> callback) const;
 
-  private:
-    std::map<SceneID, SceneItem> items_;
-    SceneID first_id_, next_id_;
+private:
+    std::map<SceneID, SceneItem> m_items;
+    SceneID m_first_id, m_next_id;
 };
 
 } // namespace rendering

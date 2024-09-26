@@ -1,21 +1,26 @@
-#include <glad/glad.h>
+// This file is part of Cardinal3D.
+// Copyleft 2024, pixcai and the Cardinal3D contributors. All wrongs reserved.
+
+#include "platform.h"
+#include "application.h"
 #include <imgui.h>
 #include <imgui_impl_opengl3.h>
 #include <imgui_impl_sdl2.h>
-
-#include "application.h"
-#include "platform.h"
 
 namespace cardinal {
 
 Platform::Platform(std::string_view title, glm::ivec2 dimension) {
     SDL_Init(SDL_INIT_EVERYTHING);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS,
+                        SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
+                        SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-    m_window = SDL_CreateWindow(title.data(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, dimension.x,
-                                dimension.y, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
+    m_window = SDL_CreateWindow(
+        title.data(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+        dimension.x, dimension.y,
+        SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
@@ -68,7 +73,8 @@ int Platform::Run(Application &application) {
             if (event.type == SDL_QUIT) {
                 running = false;
             }
-            if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE &&
+            if (event.type == SDL_WINDOWEVENT &&
+                event.window.event == SDL_WINDOWEVENT_CLOSE &&
                 event.window.windowID == SDL_GetWindowID(m_window)) {
                 running = false;
             }
@@ -98,6 +104,8 @@ glm::ivec2 Platform::GetDrawableSize() const {
     return glm::ivec2(width, height);
 }
 
-glm::ivec2 Platform::Scale(glm::ivec2 position) { return position * GetDrawableSize() / GetWindowSize(); }
+glm::ivec2 Platform::Scale(glm::ivec2 position) {
+    return position * GetDrawableSize() / GetWindowSize();
+}
 
 } // namespace cardinal

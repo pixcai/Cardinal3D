@@ -1,10 +1,9 @@
+// This file is part of Cardinal3D.
+// Copyleft 2024, pixcai and the Cardinal3D contributors. All wrongs reserved.
+
 #pragma once
 
-#define SDL_MAIN_HANDLED
-
-#include <SDL2/SDL.h>
-#include <glm/glm.hpp>
-
+#include "common.h"
 #include "gui/manager.h"
 #include "platform.h"
 #include "rendering/camera.h"
@@ -14,21 +13,19 @@ namespace cardinal {
 using namespace gui;
 using namespace rendering;
 
+struct Settings {
+    std::string title = "Cardinal3D";
+    glm::ivec2 dimension{1000, 640};
+};
+
 class Application {
-  public:
-    struct Settings {
-        std::string title;
-        glm::ivec2 dimension;
-
-        Settings() : title("Cardinal3D"), dimension(1000, 640) {}
-    };
-
+public:
     Application(Settings settings = {});
     ~Application();
 
     int Run();
 
-  private:
+private:
     friend class Platform;
 
     void Render();

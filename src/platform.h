@@ -1,16 +1,19 @@
+// This file is part of Cardinal3D.
+// Copyleft 2024, pixcai and the Cardinal3D contributors. All wrongs reserved.
+
 #pragma once
 
-#include <string_view>
+#include "common.h"
 
+#define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
-#include <glm/glm.hpp>
 
 namespace cardinal {
 
 class Application;
 
 class Platform {
-  public:
+public:
     Platform(std::string_view title, glm::ivec2 dimension);
     ~Platform();
 
@@ -21,7 +24,7 @@ class Platform {
 
     glm::ivec2 Scale(glm::ivec2 position);
 
-  private:
+private:
     void BeginFrame();
     void EndFrame();
 

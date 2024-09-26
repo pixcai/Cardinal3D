@@ -1,22 +1,22 @@
 #include <utility>
 
 #include "application.h"
-#include "platform.h"
 #include "rendering/renderer.h"
 
 namespace cardinal {
 
-Application::Application(Platform *platform)
-    : m_platform(platform), m_gui(platform->GetWindowSize()), m_scene(0), m_camera(platform->GetWindowSize()) {
-    Renderer::Setup(platform->GetDrawableSize());
+Application::Application(Settings settings)
+    : m_platform(settings.title, settings.dimension), m_gui(m_platform.GetWindowSize()), m_scene(0),
+      m_camera(m_platform.GetDrawableSize()) {
+    Renderer::Setup(m_platform.GetDrawableSize());
     Renderer::Get().SetProjectionMatrix(m_camera.GetProjectionMatrix());
 
     Mesh box{
         {
-            {{-1.0f, -1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, 0},
-            {{1.0f, -1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, 1},
-            {{1.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, 2},
-            {{-1.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, 3},
+            {{-1.0f, -1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}, 0},
+            {{1.0f, -1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}, 1},
+            {{1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}, 2},
+            {{-1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}, 3},
 
             {{-1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, 1.0f}, 4},
             {{1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, 1.0f}, 5},
@@ -29,6 +29,8 @@ Application::Application(Platform *platform)
 }
 
 Application::~Application() { Renderer::Shutdown(); }
+
+int Application::Run() { return m_platform.Run(*this); }
 
 void Application::Render() {
     Renderer &renderer = Renderer::Get();

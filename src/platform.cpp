@@ -57,7 +57,7 @@ void Platform::EndFrame() {
     SDL_GL_SwapWindow(m_window);
 }
 
-int Platform::Run(Application &app) {
+int Platform::Run(Application &application) {
     bool running = true;
 
     while (running) {
@@ -72,13 +72,13 @@ int Platform::Run(Application &app) {
                 event.window.windowID == SDL_GetWindowID(m_window)) {
                 running = false;
             }
-            app.ProcessEvent(event);
+            application.ProcessEvent(event);
         }
         if (SDL_GetWindowFlags(m_window) & SDL_WINDOW_MINIMIZED) {
             continue;
         }
         BeginFrame();
-        app.Render();
+        application.Render();
         EndFrame();
     }
     return 0;

@@ -39,7 +39,7 @@ class Camera {
     float m_fov, m_aspect_ratio, m_near, m_far, m_radius;
     glm::vec3 m_looking_at, m_position;
     glm::quat m_rotation;
-    glm::mat4 m_view_matrix, m_inv_view_matrix;
+    glm::mat4 m_view_matrix, m_view_matrix_inverse;
     glm::mat4 m_projection_matrix;
 };
 

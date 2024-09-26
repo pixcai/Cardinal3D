@@ -13,6 +13,7 @@ namespace rendering {
 Camera::Camera(glm::ivec2 dimension) {
     Reset();
     m_aspect_ratio = static_cast<float>(dimension.x) / static_cast<float>(dimension.y);
+    m_projection_matrix = glm::perspective(m_fov, m_aspect_ratio, m_near, m_far);
 }
 
 glm::mat4 &Camera::GetViewMatrix() { return m_view_matrix; }
@@ -35,7 +36,7 @@ void Camera::LookAt(glm::vec3 target) {
 void Camera::SetOffset(glm::vec2 offset) {
     glm::vec3 y = m_rotation * kUnitY;
     glm::vec3 z = GetDirection();
-    glm::vec3 x = glm::normalize(glm::cross(y, z));
+    glm::vec3 x = glm::normalize(glm::cross(z, y));
 
     m_looking_at += x * offset.x * 0.015f - y * offset.y * 0.015f;
     UpdatePosition();
@@ -47,7 +48,7 @@ void Camera::SetRotate(glm::vec2 offset) {
 
     glm::vec3 y = m_rotation * kUnitY;
     glm::vec3 z = GetDirection();
-    glm::vec3 x = glm::normalize(glm::cross(y, z));
+    glm::vec3 x = glm::normalize(glm::cross(z, y));
 
     m_rotation = glm::angleAxis(y_offset, kUnitY) * glm::angleAxis(x_offset, x) * m_rotation;
     UpdatePosition();
@@ -72,9 +73,8 @@ void Camera::Reset() {
 
 void Camera::UpdatePosition() {
     m_position = m_looking_at + m_rotation * kUnitZ * m_radius;
-    m_inv_view_matrix = glm::translate(glm::mat4(1.0f), m_position) * glm::mat4_cast(m_rotation);
-    m_view_matrix = glm::inverse(m_inv_view_matrix);
-    m_projection_matrix = glm::perspective(m_fov, m_aspect_ratio, m_near, m_far);
+    m_view_matrix_inverse = glm::translate(glm::mat4(1.0f), m_position) * glm::mat4_cast(m_rotation);
+    m_view_matrix = glm::inverse(m_view_matrix_inverse);
 }
 
 } // namespace rendering

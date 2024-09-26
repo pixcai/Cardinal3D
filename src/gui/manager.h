@@ -19,7 +19,7 @@ class Manager {
   private:
     void RenderMainMenuBar(rendering::Scene &scene);
 
-    glm::ivec2 dimension_;
+    glm::ivec2 m_dimension;
 };
 
 } // namespace gui

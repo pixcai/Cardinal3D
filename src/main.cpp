@@ -1,9 +1,7 @@
 #include "application.h"
-#include "platform.h"
 
 int main() {
-    cardinal::Platform platform{"Cardinal3D", {1000, 640}};
-    cardinal::Application app{&platform};
+    cardinal::Application app;
 
-    return platform.Run(app);
+    return app.Run();
 }

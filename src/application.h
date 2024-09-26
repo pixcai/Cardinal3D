@@ -6,6 +6,7 @@
 #include <glm/glm.hpp>
 
 #include "gui/manager.h"
+#include "platform.h"
 #include "rendering/camera.h"
 
 namespace cardinal {
@@ -13,12 +14,19 @@ namespace cardinal {
 using namespace gui;
 using namespace rendering;
 
-class Platform;
-
 class Application {
   public:
-    Application(Platform *platform = nullptr);
+    struct Settings {
+        std::string title;
+        glm::ivec2 dimension;
+
+        Settings() : title("Cardinal3D"), dimension(1000, 640) {}
+    };
+
+    Application(Settings settings = {});
     ~Application();
+
+    int Run();
 
   private:
     friend class Platform;
@@ -26,7 +34,7 @@ class Application {
     void Render();
     void ProcessEvent(const SDL_Event &event);
 
-    Platform *m_platform;
+    Platform m_platform;
     Manager m_gui;
     Scene m_scene;
 

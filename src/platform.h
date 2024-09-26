@@ -14,7 +14,7 @@ class Platform {
     Platform(std::string_view title, glm::ivec2 dimension);
     ~Platform();
 
-    int Run(Application &app);
+    int Run(Application &application);
 
     glm::ivec2 GetWindowSize() const;
     glm::ivec2 GetDrawableSize() const;

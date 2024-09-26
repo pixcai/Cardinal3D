@@ -6,14 +6,30 @@
 namespace cardinal {
 namespace rendering {
 
+enum class CameraControl {
+    kNone,
+    kMovement,
+    kRotation,
+};
+
 class Camera {
   public:
-    Camera(const glm::ivec2 dimension);
+    Camera(glm::ivec2 dimension);
 
+    glm::mat4 &GetViewMatrix();
     const glm::mat4 &GetViewMatrix() const;
+
+    glm::mat4 &GetProjectionMatrix();
     const glm::mat4 &GetProjectionMatrix() const;
 
-    void LookAt(glm::vec3 center, glm::vec3 position);
+    glm::vec3 GetDirection();
+    glm::vec3 GetDirection() const;
+
+    void LookAt(glm::vec3 target);
+
+    void SetOffset(glm::vec2 offset);
+    void SetRotate(glm::vec2 offset);
+    void SetScale(float factor);
 
     void Reset();
 
@@ -21,10 +37,10 @@ class Camera {
     void UpdatePosition();
 
     float m_fov, m_aspect_ratio, m_near, m_far, m_radius;
-    glm::vec3 m_looking_at, m_position, m_up;
+    glm::vec3 m_looking_at, m_position;
     glm::quat m_rotation;
     glm::mat4 m_view_matrix, m_inv_view_matrix;
-    glm::mat4 m_projection_matrix, m_inv_projection_matrix;
+    glm::mat4 m_projection_matrix;
 };
 
 } // namespace rendering

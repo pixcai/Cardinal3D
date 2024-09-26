@@ -3,7 +3,6 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-#include "camera.h"
 #include "framebuffer.h"
 #include "mesh.h"
 #include "scene.h"
@@ -28,7 +27,7 @@ class Renderer {
     void Render(Mesh &mesh, const MeshOptions &options);
     void EndRender();
 
-    Camera &GetCamera();
+    void SetProjectionMatrix(const glm::mat4 &projection_matrix);
 
   private:
     Renderer(const glm::ivec2 dimension);
@@ -40,8 +39,7 @@ class Renderer {
     Shader m_mesh_shader;
 
     glm::ivec2 m_dimension;
-
-    Camera m_camera;
+    glm::mat4 m_projection_matrix = glm::mat4(1.0f);
 };
 
 } // namespace rendering

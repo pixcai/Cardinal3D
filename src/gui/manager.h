@@ -11,10 +11,10 @@ namespace gui {
 
 class Manager {
   public:
-    Manager(const glm::ivec2 dimension);
+    Manager(glm::ivec2 dimension);
     ~Manager();
 
-    void Render(rendering::Scene &scene, const rendering::Camera &camera);
+    void Render(rendering::Scene &scene, rendering::Camera &camera);
 
   private:
     void RenderMainMenuBar(rendering::Scene &scene);

@@ -8,27 +8,27 @@
 
 namespace cardinal {
 
-Platform::Platform(const std::string &title, glm::ivec2 dimension) {
+Platform::Platform(std::string_view title, glm::ivec2 dimension) {
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-    window_ = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, dimension.x,
-                               dimension.y, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
+    m_window = SDL_CreateWindow(title.data(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, dimension.x,
+                                dimension.y, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
 
-    context_ = SDL_GL_CreateContext(window_);
-    SDL_GL_MakeCurrent(window_, context_);
+    m_context = SDL_GL_CreateContext(m_window);
+    SDL_GL_MakeCurrent(m_window, m_context);
     SDL_GL_SetSwapInterval(1);
 
     gladLoadGL();
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGui_ImplSDL2_InitForOpenGL(window_, context_);
+    ImGui_ImplSDL2_InitForOpenGL(m_window, m_context);
     ImGui_ImplOpenGL3_Init();
 }
 
@@ -37,12 +37,12 @@ Platform::~Platform() {
     ImGui_ImplSDL2_Shutdown();
     ImGui::DestroyContext();
 
-    SDL_GL_DeleteContext(context_);
-    SDL_DestroyWindow(window_);
+    SDL_GL_DeleteContext(m_context);
+    SDL_DestroyWindow(m_window);
     SDL_Quit();
 
-    window_ = nullptr;
-    context_ = nullptr;
+    m_window = nullptr;
+    m_context = nullptr;
 }
 
 void Platform::BeginFrame() {
@@ -54,7 +54,7 @@ void Platform::BeginFrame() {
 void Platform::EndFrame() {
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-    SDL_GL_SwapWindow(window_);
+    SDL_GL_SwapWindow(m_window);
 }
 
 int Platform::Run(Application &app) {
@@ -69,12 +69,12 @@ int Platform::Run(Application &app) {
                 running = false;
             }
             if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE &&
-                event.window.windowID == SDL_GetWindowID(window_)) {
+                event.window.windowID == SDL_GetWindowID(m_window)) {
                 running = false;
             }
             app.ProcessEvent(event);
         }
-        if (SDL_GetWindowFlags(window_) & SDL_WINDOW_MINIMIZED) {
+        if (SDL_GetWindowFlags(m_window) & SDL_WINDOW_MINIMIZED) {
             continue;
         }
         BeginFrame();
@@ -87,15 +87,17 @@ int Platform::Run(Application &app) {
 glm::ivec2 Platform::GetWindowSize() const {
     int width, height;
 
-    SDL_GetWindowSize(window_, &width, &height);
+    SDL_GetWindowSize(m_window, &width, &height);
     return glm::ivec2(width, height);
 }
 
 glm::ivec2 Platform::GetDrawableSize() const {
     int width, height;
 
-    SDL_GL_GetDrawableSize(window_, &width, &height);
+    SDL_GL_GetDrawableSize(m_window, &width, &height);
     return glm::ivec2(width, height);
 }
+
+glm::ivec2 Platform::Scale(glm::ivec2 position) { return position * GetDrawableSize() / GetWindowSize(); }
 
 } // namespace cardinal

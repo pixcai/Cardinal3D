@@ -5,8 +5,8 @@
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 
+#include "functional/overload.h"
 #include "scene.h"
-#include "util/util.h"
 
 namespace cardinal {
 namespace rendering {
@@ -21,7 +21,7 @@ SceneItem &SceneItem::operator=(SceneItem &&other) {
 }
 
 void SceneItem::Render(const glm::mat4 &view) {
-    std::visit(overloaded{[&](SceneObject &object) { object.Render(view); }}, data_);
+    std::visit(functional::Overload{[&](SceneObject &object) { object.Render(view); }}, data_);
 }
 
 Scene::Scene(SceneID start) : first_id_(start), next_id_(start) {}

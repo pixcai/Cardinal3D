@@ -54,16 +54,16 @@ void Shader::Load(std::string_view vertex, std::string_view fragment) {
     glLinkProgram(program_);
 }
 
-void Shader::Uniform(const std::string &name, const glm::mat4 &matrix) const {
-    glUniformMatrix4fv(glGetUniformLocation(program_, name.c_str()), 1, GL_FALSE, glm::value_ptr(matrix));
+void Shader::Uniform(std::string_view name, const glm::mat4 &matrix) const {
+    glUniformMatrix4fv(glGetUniformLocation(program_, name.data()), 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
-void Shader::Uniform(const std::string &name, const glm::vec3 &vector) const {
-    glUniform3fv(glGetUniformLocation(program_, name.c_str()), 1, glm::value_ptr(vector));
+void Shader::Uniform(std::string_view name, glm::vec3 vector) const {
+    glUniform3fv(glGetUniformLocation(program_, name.data()), 1, glm::value_ptr(vector));
 }
 
-void Shader::Uniform(const std::string &name, GLuint value) const {
-    glUniform1ui(glGetUniformLocation(program_, name.c_str()), value);
+void Shader::Uniform(std::string_view name, GLuint value) const {
+    glUniform1ui(glGetUniformLocation(program_, name.data()), value);
 }
 
 bool Shader::Validate(GLuint shader) const {
@@ -84,7 +84,7 @@ void Shader::Destroy() {
     program_ = vertex_ = fragment_ = 0;
 }
 
-const std::string_view Shader::Presets::mesh_vertex = R"(
+const std::string_view ShaderPresets::kMeshVertex = R"(
 #version 460 core
 
 layout(location = 0) in vec3 v_position;
@@ -97,7 +97,7 @@ void main() {
     gl_Position = u_mvp * vec4(v_position, 1.0);
 })";
 
-const std::string_view Shader::Presets::mesh_fragment = R"(
+const std::string_view ShaderPresets::kMeshFragment = R"(
 #version 460 core
 
 layout(location = 0) out vec4 out_color;

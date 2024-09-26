@@ -1,11 +1,14 @@
-#include <utility>
+// This file is part of Cardinal3D.
+// Copyleft 2024, pixcai and the Cardinal3D contributors. All wrongs reserved.
 
 #include "mesh.h"
 
 namespace cardinal {
 namespace rendering {
 
-Mesh::Mesh() { Create(); }
+Mesh::Mesh() {
+    Create();
+}
 
 Mesh::Mesh(std::vector<Vertex> &&vertices, std::vector<Index> &&indices) {
     Create();
@@ -25,7 +28,9 @@ Mesh::Mesh(Mesh &&other) {
     indices_ = std::move(other.indices_);
 }
 
-Mesh::~Mesh() { Destroy(); }
+Mesh::~Mesh() {
+    Destroy();
+}
 
 void Mesh::operator=(Mesh &&other) {
     Destroy();
@@ -50,11 +55,12 @@ void Mesh::Render() {
     glBindVertexArray(0);
 }
 
-void Mesh::ReCreate(std::vector<Vertex> &&vertices, std::vector<Index> &&indices) {
+void Mesh::ReCreate(std::vector<Vertex> &&vertices,
+                    std::vector<Index> &&indices) {
     dirty_ = true;
     vertices_ = std::move(vertices);
     indices_ = std::move(indices);
-    element_count_ = indices_.size();
+    element_count_ = static_cast<GLsizei>(indices_.size());
 }
 
 void Mesh::Create() {
@@ -68,10 +74,12 @@ void Mesh::Create() {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
     glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<GLvoid *>(sizeof(glm::vec3)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                          reinterpret_cast<GLvoid *>(sizeof(glm::vec3)));
     glEnableVertexAttribArray(1);
 
-    glVertexAttribIPointer(2, 1, GL_UNSIGNED_INT, sizeof(Vertex), reinterpret_cast<GLvoid *>(2 * sizeof(glm::vec3)));
+    glVertexAttribIPointer(2, 1, GL_UNSIGNED_INT, sizeof(Vertex),
+                           reinterpret_cast<GLvoid *>(2 * sizeof(glm::vec3)));
     glEnableVertexAttribArray(2);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_);
@@ -89,10 +97,12 @@ void Mesh::Update() {
     glBindVertexArray(vao_);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo_);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices_.size(), vertices_.data(), GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices_.size(),
+                 vertices_.data(), GL_DYNAMIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Index) * indices_.size(), indices_.data(), GL_DYNAMIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Index) * indices_.size(),
+                 indices_.data(), GL_DYNAMIC_DRAW);
 
     glBindVertexArray(0);
     dirty_ = false;

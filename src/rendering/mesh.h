@@ -1,15 +1,15 @@
+// This file is part of Cardinal3D.
+// Copyleft 2024, pixcai and the Cardinal3D contributors. All wrongs reserved.
+
 #pragma once
 
-#include <vector>
-
-#include <glad/glad.h>
-#include <glm/glm.hpp>
+#include "common.h"
 
 namespace cardinal {
 namespace rendering {
 
 class Mesh {
-  public:
+public:
     using Index = GLuint;
 
     struct Vertex {
@@ -30,13 +30,13 @@ class Mesh {
     void Render();
     void ReCreate(std::vector<Vertex> &&vertices, std::vector<Index> &&indices);
 
-  private:
+private:
     void Create();
     void Destroy();
     void Update();
 
     bool dirty_ = true;
-    GLuint element_count_ = 0;
+    GLsizei element_count_ = 0;
     GLuint vao_ = 0;
     GLuint vbo_ = 0;
     GLuint ebo_ = 0;

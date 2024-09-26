@@ -1,16 +1,15 @@
-#include <cassert>
-#include <utility>
-
-#include <glm/gtc/type_ptr.hpp>
-
 #include "framebuffer.h"
+#include <cassert>
+#include <glm/gtc/type_ptr.hpp>
+#include <utility>
 
 namespace cardinal {
 namespace rendering {
 
-Framebuffer::Framebuffer(int outputs, const glm::ivec2 dimension, int samples, bool depth) {
+Framebuffer::Framebuffer(int outputs, const glm::ivec2 dimension, int samples,
+                         bool depth) {
     assert(outputs > 0 && outputs <= 32);
-    output_textures_.resize(outputs);
+    output_textures_.resize(static_cast<size_t>(outputs));
     depth_ = depth;
     Resize(dimension, samples);
 }
@@ -26,7 +25,9 @@ Framebuffer::Framebuffer(Framebuffer &&other) {
     dimension_ = other.dimension_;
 }
 
-Framebuffer::~Framebuffer() { Destroy(); }
+Framebuffer::~Framebuffer() {
+    Destroy();
+}
 
 void Framebuffer::operator=(Framebuffer &&other) {
     Destroy();
@@ -40,7 +41,9 @@ void Framebuffer::operator=(Framebuffer &&other) {
     dimension_ = other.dimension_;
 }
 
-void Framebuffer::Bind() const { glBindFramebuffer(GL_FRAMEBUFFER, framebuffer_); }
+void Framebuffer::Bind() const {
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer_);
+}
 
 void Framebuffer::Clear(int index, const glm::vec4 &color) const {
     assert(index >= 0 && index < static_cast<int>(output_textures_.size()));
@@ -67,8 +70,8 @@ void Framebuffer::BlitToScreen(int index, const glm::ivec2 dimension) const {
     glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer_);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
     glReadBuffer(GL_COLOR_ATTACHMENT0 + index);
-    glBlitFramebuffer(0, 0, dimension_.x, dimension_.y, 0, 0, dimension.x, dimension.y, GL_COLOR_BUFFER_BIT,
-                      GL_NEAREST);
+    glBlitFramebuffer(0, 0, dimension_.x, dimension_.y, 0, 0, dimension.x,
+                      dimension.y, GL_COLOR_BUFFER_BIT, GL_NEAREST);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -78,7 +81,8 @@ void Framebuffer::BlitTo(int index, const Framebuffer &other) const {
     glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer_);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, other.framebuffer_);
     glReadBuffer(GL_COLOR_ATTACHMENT0 + index);
-    glBlitFramebuffer(0, 0, dimension_.x, dimension_.y, 0, 0, other.dimension_.x, other.dimension_.y,
+    glBlitFramebuffer(0, 0, dimension_.x, dimension_.y, 0, 0,
+                      other.dimension_.x, other.dimension_.y,
                       GL_COLOR_BUFFER_BIT, GL_NEAREST);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
@@ -91,28 +95,36 @@ void Framebuffer::Create() {
     glCreateTextures(type, output_textures_.size(), output_textures_.data());
 
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer_);
-    for (int i = 0, n = static_cast<int>(output_textures_.size()); i < n; i++) {
+    for (uint32_t i = 0, n = static_cast<uint32_t>(output_textures_.size());
+         i < n; i++) {
         if (samples_ == 1) {
-            glTextureStorage2D(output_textures_[i], 1, GL_RGBA8, dimension_.x, dimension_.y);
+            glTextureStorage2D(output_textures_[i], 1, GL_RGBA8, dimension_.x,
+                               dimension_.y);
             glTexParameteri(type, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
             glTexParameteri(type, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         } else {
-            glTextureStorage2DMultisample(output_textures_[i], samples_, GL_RGBA8, dimension_.x, dimension_.y, GL_TRUE);
+            glTextureStorage2DMultisample(output_textures_[i], samples_,
+                                          GL_RGBA8, dimension_.x, dimension_.y,
+                                          GL_TRUE);
         }
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, type, output_textures_[i], 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, type,
+                               output_textures_[i], 0);
         draw_buffers.push_back(GL_COLOR_ATTACHMENT0 + i);
     }
     if (depth_) {
         glCreateTextures(type, 1, &depth_texture_);
         if (samples_ == 1) {
-            glTextureStorage2D(depth_texture_, 0, GL_DEPTH_COMPONENT32, dimension_.x, dimension_.y);
+            glTextureStorage2D(depth_texture_, 0, GL_DEPTH_COMPONENT32,
+                               dimension_.x, dimension_.y);
             glTexParameteri(type, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
             glTexParameteri(type, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         } else {
-            glTextureStorage2DMultisample(depth_texture_, samples_, GL_DEPTH_COMPONENT32, dimension_.x, dimension_.y,
-                                          GL_TRUE);
+            glTextureStorage2DMultisample(depth_texture_, samples_,
+                                          GL_DEPTH_COMPONENT32, dimension_.x,
+                                          dimension_.y, GL_TRUE);
         }
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, type, depth_texture_, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, type,
+                               depth_texture_, 0);
     }
     glDrawBuffers(draw_buffers.size(), draw_buffers.data());
     glBindFramebuffer(GL_FRAMEBUFFER, 0);

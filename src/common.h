@@ -21,7 +21,7 @@ namespace cardinal {
 
 // Since GLM doesn't define these unit vectors
 // we need to define them separately
-inline constexpr glm::vec3 kAxisX{0.0f, 1.0f, 0.0f};
+inline constexpr glm::vec3 kAxisX{1.0f, 0.0f, 0.0f};
 inline constexpr glm::vec3 kAxisY{0.0f, 1.0f, 0.0f};
 inline constexpr glm::vec3 kAxisZ{0.0f, 0.0f, 1.0f};
 

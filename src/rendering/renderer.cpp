@@ -1,5 +1,5 @@
-#include <glad/glad.h>
-#include <glm/gtc/matrix_transform.hpp>
+// This file is part of Cardinal3D.
+// Copyleft 2024, pixcai and the Cardinal3D contributors. All wrongs reserved.
 
 #include "renderer.h"
 
@@ -38,17 +38,24 @@ void Renderer::BeginRender() {
 void Renderer::Render(Mesh &mesh, const MeshOptions &options) {
     m_mesh_shader.Bind();
     m_mesh_shader.Uniform("u_mvp", m_projection_matrix * options.model_view);
+    m_mesh_shader.Uniform("u_normal",
+                          glm::transpose(glm::inverse(options.model_view)));
     m_mesh_shader.Uniform("u_color", options.color);
     mesh.Render();
 }
 
-void Renderer::EndRender() { m_framebuffer.BlitToScreen(0, m_dimension); }
+void Renderer::EndRender() {
+    m_framebuffer.BlitToScreen(0, m_dimension);
+}
 
-void Renderer::SetProjectionMatrix(const glm::mat4 &projection_matrix) { m_projection_matrix = projection_matrix; }
+void Renderer::SetProjectionMatrix(const glm::mat4 &projection_matrix) {
+    m_projection_matrix = projection_matrix;
+}
 
 Renderer::Renderer(const glm::ivec2 dimension)
     : m_framebuffer(2, dimension, DEFAULT_SAMPLES, true),
-      m_mesh_shader(ShaderPresets::kMeshVertex, ShaderPresets::kMeshFragment), m_dimension(dimension) {}
+      m_mesh_shader(ShaderPresets::kMeshVertex, ShaderPresets::kMeshFragment),
+      m_dimension(dimension) {}
 
 Renderer::~Renderer() {}
 

@@ -1,9 +1,9 @@
+// This file is part of Cardinal3D.
+// Copyleft 2024, pixcai and the Cardinal3D contributors. All wrongs reserved.
+
 #pragma once
 
-#include <string_view>
-
-#include <glad/glad.h>
-#include <glm/glm.hpp>
+#include "common.h"
 
 namespace cardinal {
 namespace rendering {
@@ -13,7 +13,7 @@ struct ShaderPresets {
 };
 
 class Shader {
-  public:
+public:
     Shader(std::string_view vertex, std::string_view fragment);
     Shader(const Shader &other) = delete;
     Shader(Shader &&other);
@@ -29,7 +29,7 @@ class Shader {
     void Uniform(std::string_view name, glm::vec3 vector) const;
     void Uniform(std::string_view name, GLuint value) const;
 
-  private:
+private:
     bool Validate(GLuint shader) const;
     void Destroy();
 

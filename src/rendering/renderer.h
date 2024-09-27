@@ -1,8 +1,9 @@
+// This file is part of Cardinal3D.
+// Copyleft 2024, pixcai and the Cardinal3D contributors. All wrongs reserved.
+
 #pragma once
 
-#include <glad/glad.h>
-#include <glm/glm.hpp>
-
+#include "common.h"
 #include "framebuffer.h"
 #include "mesh.h"
 #include "scene.h"
@@ -12,7 +13,7 @@ namespace cardinal {
 namespace rendering {
 
 class Renderer {
-  public:
+public:
     static void Setup(const glm::ivec2 dimension);
     static void Shutdown();
     static Renderer &Get();
@@ -29,7 +30,7 @@ class Renderer {
 
     void SetProjectionMatrix(const glm::mat4 &projection_matrix);
 
-  private:
+private:
     Renderer(const glm::ivec2 dimension);
     ~Renderer();
 

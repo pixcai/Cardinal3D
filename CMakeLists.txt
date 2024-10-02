@@ -18,8 +18,8 @@ set(SOURCES_CARDINAL3D_GUI
 set(SOURCES_CARDINAL3D_RENDERING
     "src/rendering/camera.cpp"
     "src/rendering/framebuffer.cpp"
-    "src/rendering/mesh.cpp"
     "src/rendering/renderer.cpp"
+    "src/rendering/scene_mesh.cpp"
     "src/rendering/scene_object.cpp"
     "src/rendering/scene.cpp"
     "src/rendering/shader.cpp"

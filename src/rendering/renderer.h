@@ -4,10 +4,9 @@
 #pragma once
 
 #include "common.h"
-#include "framebuffer.h"
-#include "mesh.h"
-#include "scene.h"
-#include "shader.h"
+#include "rendering/camera.h"
+#include "rendering/framebuffer.h"
+#include "rendering/shader.h"
 
 namespace cardinal {
 namespace rendering {
@@ -18,17 +17,10 @@ public:
     static void Shutdown();
     static Renderer &Get();
 
-    struct MeshOptions {
-        GLuint id;
-        glm::vec3 color;
-        glm::mat4 model_view;
-    };
-
     void BeginRender();
-    void Render(Mesh &mesh, const MeshOptions &options);
+    template <typename Tp>
+    void Render(Tp &object, Camera &camera);
     void EndRender();
-
-    void SetProjectionMatrix(const glm::mat4 &projection_matrix);
 
 private:
     Renderer(const glm::ivec2 dimension);
@@ -40,7 +32,6 @@ private:
     Shader m_mesh_shader;
 
     glm::ivec2 m_dimension;
-    glm::mat4 m_projection_matrix = glm::mat4(1.0f);
 };
 
 } // namespace rendering

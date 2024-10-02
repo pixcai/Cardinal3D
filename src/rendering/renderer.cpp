@@ -1,7 +1,7 @@
 // This file is part of Cardinal3D.
 // Copyleft 2024, pixcai and the Cardinal3D contributors. All wrongs reserved.
 
-#include "renderer.h"
+#include "rendering/renderer.h"
 
 static constexpr int DEFAULT_SAMPLES = 4;
 
@@ -35,21 +35,19 @@ void Renderer::BeginRender() {
     m_framebuffer.ClearDepth();
 }
 
-void Renderer::Render(Mesh &mesh, const MeshOptions &options) {
+template <typename Tp>
+void Renderer::Render(Tp &object, Camera &camera) {
     m_mesh_shader.Bind();
-    m_mesh_shader.Uniform("u_mvp", m_projection_matrix * options.model_view);
+    m_mesh_shader.Uniform("u_mvp", camera.GetProjectionMatrix() *
+                                       camera.GetViewMatrix());
     m_mesh_shader.Uniform("u_normal",
-                          glm::transpose(glm::inverse(options.model_view)));
-    m_mesh_shader.Uniform("u_color", options.color);
-    mesh.Render();
+                          glm::transpose(glm::inverse(camera.GetViewMatrix())));
+    m_mesh_shader.Uniform("u_color", glm::vec3(1.0f));
+    object.Render();
 }
 
 void Renderer::EndRender() {
     m_framebuffer.BlitToScreen(0, m_dimension);
-}
-
-void Renderer::SetProjectionMatrix(const glm::mat4 &projection_matrix) {
-    m_projection_matrix = projection_matrix;
 }
 
 Renderer::Renderer(const glm::ivec2 dimension)

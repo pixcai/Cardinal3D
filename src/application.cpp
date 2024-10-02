@@ -3,33 +3,33 @@
 
 #include "application.h"
 #include "rendering/renderer.h"
+#include "rendering/rendering.h"
+#include "rendering/scene.h"
+#include "rendering/scene_mesh.h"
 
 namespace cardinal {
 
 Application::Application(Settings settings)
     : m_platform(settings.title, settings.dimension),
       m_gui(m_platform.GetWindowSize()),
-      m_scene(0),
+      m_scene(),
       m_camera(m_platform.GetDrawableSize()) {
     Renderer::Setup(m_platform.GetDrawableSize());
-    Renderer::Get().SetProjectionMatrix(m_camera.GetProjectionMatrix());
 
-    Mesh box{
-        {
-            {{-1.0f, -1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}, 0},
-            {{1.0f, -1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}, 1},
-            {{1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}, 2},
-            {{-1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}, 3},
+    m_scene.Add(SceneMesh{
+        SceneMeshData{{
+                          {{-1.0f, -1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}, 0},
+                          {{1.0f, -1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}, 1},
+                          {{1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}, 2},
+                          {{-1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}, 3},
 
-            {{-1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, 4},
-            {{1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, 5},
-            {{1.0f, 1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, 6},
-            {{-1.0f, 1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, 7},
-        },
-        {0, 1, 2, 2, 3, 0, 4, 7, 6, 6, 5, 4, 3, 2, 6, 6, 7, 3,
-         0, 4, 5, 5, 1, 0, 4, 0, 3, 3, 7, 4, 5, 6, 2, 2, 1, 5},
-    };
-    m_scene.Add(SceneObject{1, std::move(box)});
+                          {{-1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, 4},
+                          {{1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, 5},
+                          {{1.0f, 1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, 6},
+                          {{-1.0f, 1.0f, -1.0f}, {0.0f, 0.0f, -1.0f}, 7},
+                      },
+                      {0, 1, 2, 2, 3, 0, 4, 7, 6, 6, 5, 4, 3, 2, 6, 6, 7, 3,
+                       0, 4, 5, 5, 1, 0, 4, 0, 3, 3, 7, 4, 5, 6, 2, 2, 1, 5}}});
 }
 
 Application::~Application() {
@@ -44,7 +44,7 @@ void Application::Render() {
     Renderer &renderer = Renderer::Get();
 
     renderer.BeginRender();
-    m_gui.Render(m_scene, m_camera);
+    m_gui.Render(m_scene);
     renderer.EndRender();
 }
 

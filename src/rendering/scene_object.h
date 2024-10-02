@@ -1,35 +1,47 @@
+// This file is part of Cardinal3D.
+// Copyleft 2024, pixcai and the Cardinal3D contributors. All wrongs reserved.
+
 #pragma once
 
-#include <glm/glm.hpp>
-
-#include "mesh.h"
+#include "rendering/camera.h"
+#include "rendering/rendering.h"
+#include <type_traits>
 
 namespace cardinal {
 namespace rendering {
 
-using SceneID = unsigned int;
+class SceneObjectBase {
+public:
+    SceneObjectBase();
+    virtual ~SceneObjectBase();
 
-class SceneObject {
-  public:
+    size_t GetID() noexcept;
+    size_t GetID() const noexcept;
+
+    virtual void Render() {}
+
+protected:
+    size_t m_id;
+};
+
+template <typename Tp>
+class SceneObject final {
+public:
+    template <typename Up>
+    static constexpr bool is = std::is_base_of_v<Tp, Up>;
+
+public:
     SceneObject() = default;
-    SceneObject(SceneID id, Mesh &&mesh);
-    SceneObject(const SceneObject &other) = delete;
     SceneObject(SceneObject &&other) = default;
-    ~SceneObject() = default;
+    SceneObject(Tp &&base);
 
-    void operator=(const SceneObject &other) = delete;
-    SceneObject &operator=(SceneObject &&other) = default;
+    size_t GetID() noexcept;
+    size_t GetID() const noexcept;
 
-    SceneID GetID() const;
+    void Render(Renderer &renderer, Camera &camera);
 
-    void Render(const glm::mat4 &view);
-
-    void SetMeshDirty();
-
-  private:
-    SceneID id_ = 0;
-    mutable Mesh mesh_;
-    mutable bool mesh_dirty_ = false;
+private:
+    Tp m_base;
 };
 
 } // namespace rendering

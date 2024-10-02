@@ -3,48 +3,32 @@
 
 #pragma once
 
-#include "common.h"
-#include "scene_object.h"
+#include "rendering/rendering.h"
+#include "rendering/scene_object.h"
 #include <functional>
-#include <map>
-#include <variant>
+#include <unordered_map>
 
 namespace cardinal {
 namespace rendering {
 
-class Camera;
-
-class SceneItem {
-public:
-    SceneItem() = default;
-    SceneItem(SceneObject &&object);
-    SceneItem(const SceneItem &other) = delete;
-    SceneItem(SceneItem &&other);
-
-    SceneItem &operator=(const SceneItem &other) = delete;
-    SceneItem &operator=(SceneItem &&other);
-
-    void Render(const glm::mat4 &view);
-
-private:
-    std::variant<SceneObject> m_data;
-};
-
 class Scene {
 public:
-    Scene(SceneID start);
+    Scene() = default;
     ~Scene() = default;
 
     std::string Load(const std::string &file);
     void Clear();
-    SceneID Add(SceneObject &&object);
 
-    void ForEach(std::function<void(SceneItem &item)> callback);
-    void ForEach(std::function<void(const SceneItem &item)> callback) const;
+    template <typename Tp>
+    void Add(Tp &&object);
+
+    void ForEach(std::function<void(SceneObjectBase &object)> callback);
+
+    void
+    ForEach(std::function<void(const SceneObjectBase &object)> callback) const;
 
 private:
-    std::map<SceneID, SceneItem> m_items;
-    SceneID m_first_id, m_next_id;
+    std::unordered_map<size_t, SceneObjectBase> m_objects{};
 };
 
 } // namespace rendering
